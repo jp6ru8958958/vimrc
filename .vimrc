@@ -11,7 +11,9 @@ filetype plugin indent on
 Plugin 'rust-lang/rust.vim'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'ycm-core/YouCompleteMe'
+
 highlight YcmErrorLine guibg=#3f0000
+
 "Normal setting
 set encoding=utf-8
 syntax enable
@@ -23,8 +25,6 @@ highlight LineNr term=bold cterm=NONE ctermfg=202 ctermbg=NONE gui=NONE guifg=Wh
 set smartcase
 set hlsearch
 hi Search cterm=reverse ctermbg=none ctermfg=none
-set cursorline
-set nowrap
 set backspace=indent,eol,start
 
 "狀態列
@@ -82,16 +82,15 @@ func! CompileRunGcc()
         exec "!g++ % -o %<"
         exec "!time ./%<"
 	elseif &filetype == 'rust'
-		exec "!rustc %<"
-		exec "!./%<"
+		exec "!cargo build"
+		exec "!cargo run"
 	elseif &filetype == 'java'
         exec "!javac %"
         exec "!time java %<"
     elseif &filetype == 'sh'
         :!time bash %
     elseif &filetype == 'python'
-        exec "!time python2.7 %"
-        exec "!time python3.6 %"
+        exec "!time python %"
     elseif &filetype == 'html'
         exec "!firefox % &"
     elseif &filetype == 'go'
@@ -100,7 +99,9 @@ func! CompileRunGcc()
     elseif &filetype == 'mkd'
         exec "!~/.vim/markdown.pl % > %.html &"
         exec "!firefox %.html &"
-    endif
+	elseif &filetype == 'lex'
+		exec "!sh start.sh"
+	endif
 endfunc
 
 "Rust
@@ -117,8 +118,10 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+"Error
 hi SpellBad ctermfg=196 ctermbg=15
-hi SpellCap ctermfg=196 ctermbg=15
+"Warning
+hi SpellCap ctermfg=192 ctermbg=16
 
 "YouCompleteMe
 set completeopt-=preview
@@ -126,3 +129,13 @@ highlight Comment ctermfg=lightblue ctermbg=0 guifg=#ffffff guibg=#000000
 highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+
+" move line up/down
+set shiftwidth=4
+
+" move cursor faster
+map <C-k>  5gk
+map <C-j>  5gj
+map <C-UP> 5gk
+map <C-DOWN> 5gj
+
