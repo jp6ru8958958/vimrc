@@ -4,15 +4,16 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'git://git.wincent.com/command-t.git'
+Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 call vundle#end()
 filetype plugin indent on
 
 "Plugin
 Plugin 'rust-lang/rust.vim'
 Plugin 'vim-syntastic/syntastic'
-Plugin 'ycm-core/YouCompleteMe'
-
-highlight YcmErrorLine guibg=#3f0000
+Plugin 'Valloric/YouCompleteMe'
 
 "Normal setting
 set encoding=utf-8
@@ -27,7 +28,7 @@ set hlsearch
 hi Search cterm=reverse ctermbg=none ctermfg=none
 set backspace=indent,eol,start
 
-"狀態列
+"Status line
 set laststatus=2
 set statusline=[%{expand('%:p')}][%{strlen(&fenc)?&fenc:&enc},\ %{&ff},\ %{strlen(&filetype)?&filetype:'plain'}]%{FileSize()}%{IsBinary()}%=%c,%l/%L\ [%3p%%]
 function IsBinary()
@@ -51,7 +52,7 @@ function FileSize()
     endif
 endfunction
 
-"編碼
+"Encoding
 if has("multi_byte")
 
 else
@@ -59,11 +60,37 @@ else
 endif
 set fileencodings=utf-8,utf-16,big5,gb2312,gbk,gb18030,euc-jp,euc-kr,latin1
 
-"縮排設定
+"Indent
 set tabstop=4
 set shiftwidth=4
 set autoindent
 set list listchars=tab:\┆\ ,trail:·
+
+
+"Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+"Error
+hi SpellBad ctermfg=196 ctermbg=15
+
+"Warning
+hi SpellCap ctermfg=192 ctermbg=16
+
+" move line up/down
+set shiftwidth=4
+
+" move cursor faster
+map <C-k>  5gk
+map <C-j>  5gj
+map <C-UP> 5gk
+map <C-DOWN> 5gj
 
 "Save
 map <F5> :call SaveFile()<CR>
@@ -71,7 +98,7 @@ func! SaveFile()
 	exec "w"
 endfunc
 
-"編譯執行
+"Compile
 map <F6> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
     exec "w"
@@ -108,34 +135,6 @@ endfunc
 syntax enable
 filetype plugin indent on
 
-"Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-"Error
-hi SpellBad ctermfg=196 ctermbg=15
-"Warning
-hi SpellCap ctermfg=192 ctermbg=16
-
-"YouCompleteMe
-set completeopt-=preview
-highlight Comment ctermfg=lightblue ctermbg=0 guifg=#ffffff guibg=#000000
-highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-
-" move line up/down
-set shiftwidth=4
-
-" move cursor faster
-map <C-k>  5gk
-map <C-j>  5gj
-map <C-UP> 5gk
-map <C-DOWN> 5gj
-
+" YouCompleteMe
+let g:ycm_confirm_extra_conf=0
+let g:ycm_python_binary_path='/usr/bin/python'
